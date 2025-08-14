@@ -9,7 +9,7 @@ void test_log(LogLevel_t level, const char *msg) {
   FILE *mem = fmemopen(buf, sizeof(buf), "w");
   assert(mem && "Failed to open memory stream");
 
-  Loggy_t lgy = loggy_init(mem, level);
+  Loggy_t lgy = loggy_init(mem, mem, level);
   assert(lgy.file && "Failed to open memory stream");
 
   switch (level) {
@@ -56,7 +56,7 @@ void test_set_level_runtime() {
   FILE *mem = fmemopen(buf, sizeof(buf), "w");
   assert(mem && "Failed to open memory stream");
 
-  Loggy_t lgy = loggy_init(mem, LOGGY_WARN);
+  Loggy_t lgy = loggy_init(mem, mem, LOGGY_WARN);
   assert(lgy.file && "Failed to open memory stream");
 
   printf("Testing initial log level: WARN\n");

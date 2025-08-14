@@ -19,11 +19,11 @@ static const char *log_level_str[] = {[LOGGY_DEBUG] = CYAN "DEBUG" RESET,
 
 typedef struct {
   FILE *file;
+  FILE *error_file;
   LogLevel_t min_lvl;
-
 } Loggy_t;
 
-Loggy_t loggy_init(FILE *out, LogLevel_t lvl);
+Loggy_t loggy_init(FILE *out, FILE *error_file, LogLevel_t lvl);
 
 int loggy_set_level(Loggy_t *lgy, LogLevel_t lvl);
 
