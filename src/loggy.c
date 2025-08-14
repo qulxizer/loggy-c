@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <time.h>
 
-Loggy_t loggy_init(FILE *out, LogLevel_t lvl) {
+Loggy_t loggy_init(FILE *out, FILE *error_out, LogLevel_t lvl) {
   Loggy_t lgy;
   lgy.file = out;
+  lgy.error_file = error_out;
   lgy.min_lvl = lvl;
 
   return lgy;
@@ -27,16 +28,20 @@ static int loggy_global(Loggy_t *lgy, LogLevel_t lvl, const char *fmt,
   if (lvl < lgy->min_lvl) {
     return 0;
   }
+  FILE *file = lgy->file;
+  if (lvl == LOGGY_ERROR) {
+    file = lgy->error_file;
+  }
   const char *level = log_level_str[lvl];
 
   char timebuf[64];
   time_t t = time(NULL);
   struct tm *tm_info = localtime(&t);
   strftime(timebuf, sizeof(timebuf), "[%Y-%m-%d %H:%M:%S]", tm_info);
-  fprintf(lgy->file, "%s %s ", timebuf, level);
+  fprintf(file, "%s %s ", timebuf, level);
 
-  vfprintf(lgy->file, fmt, args);
-  fprintf(lgy->file, "\n");
+  vfprintf(file, fmt, args);
+  fprintf(file, "\n");
   return 0;
 }
 
